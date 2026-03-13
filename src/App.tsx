@@ -3,7 +3,52 @@ import weddingRsvpQr20260312 from "./assets/wedding-rsvp-qr-20260312.png";
 
 export default function MithiWeddingWebsite() {
   const [storyView, setStoryView] = React.useState<"bride" | "groom">("bride");
+  const [scrollY, setScrollY] = React.useState(0);
+  const [heroSlide, setHeroSlide] = React.useState(0);
+  const [selectedMapStop, setSelectedMapStop] = React.useState("Ceremony");
+  const [activeSection, setActiveSection] = React.useState("home");
   const publicAsset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+  const weddingDate = React.useMemo(() => new Date("2027-03-27T17:00:00-04:00"), []);
+  const getTimeLeft = React.useCallback(() => {
+    const now = new Date();
+    const diff = Math.max(0, weddingDate.getTime() - now.getTime());
+    const totalMinutes = Math.floor(diff / (1000 * 60));
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+    const minutes = totalMinutes % 60;
+
+    return { days, hours, minutes };
+  }, [weddingDate]);
+  const [timeLeft, setTimeLeft] = React.useState(getTimeLeft);
+
+  React.useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTimeLeft(getTimeLeft());
+    }, 60_000);
+
+    setTimeLeft(getTimeLeft());
+
+    return () => window.clearInterval(intervalId);
+  }, [getTimeLeft]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  React.useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setHeroSlide((current) => (current + 1) % 5);
+    }, 4000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const GoldDivider = () => (
     <div className="relative flex items-center justify-center py-10 overflow-hidden">
@@ -30,63 +75,165 @@ export default function MithiWeddingWebsite() {
 
   const FloatingFlowers = () => (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute left-[4%] top-[12%] animate-[floatFlower_8s_ease-in-out_infinite] opacity-70">
-        <svg viewBox="0 0 120 120" className="h-24 w-24">
-          <circle cx="60" cy="60" r="10" fill="#f4d35e" />
-          <ellipse cx="60" cy="28" rx="14" ry="24" fill="#9db7d5" />
-          <ellipse cx="92" cy="60" rx="24" ry="14" fill="#a8c3a1" />
-          <ellipse cx="60" cy="92" rx="14" ry="24" fill="#faf6ef" />
-          <ellipse cx="28" cy="60" rx="24" ry="14" fill="#dbeafe" />
-          <ellipse cx="82" cy="38" rx="12" ry="18" fill="#fff7cc" />
+      <div className="absolute left-[4%] top-[10%] animate-[floatFlower_10s_ease-in-out_infinite] opacity-80">
+        <svg viewBox="0 0 160 160" className="h-28 w-28 drop-shadow-[0_18px_24px_rgba(148,113,127,0.15)]">
+          <path d="M80 150C79 110 82 76 88 24" stroke="#88a387" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M88 64C107 50 118 33 120 16C101 22 90 34 82 50" fill="#dce8d8" />
+          <path d="M84 88C65 74 54 58 52 40C71 46 82 58 90 74" fill="#e8f0e3" />
+          <g transform="translate(78 60)">
+            <ellipse cx="0" cy="-24" rx="12" ry="26" fill="#f8e7ea" />
+            <ellipse cx="22" cy="-6" rx="24" ry="13" fill="#f3d8de" transform="rotate(24)" />
+            <ellipse cx="16" cy="18" rx="14" ry="25" fill="#fbf4ef" transform="rotate(46)" />
+            <ellipse cx="-16" cy="18" rx="14" ry="25" fill="#f5dfe5" transform="rotate(-44)" />
+            <ellipse cx="-24" cy="-4" rx="24" ry="13" fill="#fbf4ef" transform="rotate(-22)" />
+            <circle cx="0" cy="0" r="10" fill="#f2c9a7" />
+            <circle cx="0" cy="0" r="4" fill="#d59d68" opacity="0.8" />
+          </g>
         </svg>
       </div>
-      <div className="absolute right-[7%] top-[18%] animate-[floatFlower_10s_ease-in-out_infinite] opacity-60" style={{ animationDelay: "-2s" }}>
-        <svg viewBox="0 0 120 120" className="h-20 w-20">
-          <circle cx="60" cy="60" r="9" fill="#f4d35e" />
-          <ellipse cx="60" cy="34" rx="12" ry="20" fill="#a8c3a1" />
-          <ellipse cx="86" cy="60" rx="20" ry="12" fill="#9db7d5" />
-          <ellipse cx="60" cy="86" rx="12" ry="20" fill="#faf6ef" />
-          <ellipse cx="34" cy="60" rx="20" ry="12" fill="#d9e9df" />
+      <div className="absolute right-[7%] top-[14%] animate-[floatFlower_12s_ease-in-out_infinite] opacity-70" style={{ animationDelay: "-3s" }}>
+        <svg viewBox="0 0 150 150" className="h-24 w-24 drop-shadow-[0_18px_22px_rgba(148,113,127,0.12)]">
+          <path d="M74 140C74 112 74 84 72 44" stroke="#88a387" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M72 76C87 64 96 50 97 34C82 39 75 48 69 62" fill="#d9e7d4" />
+          <path d="M70 84C58 75 50 64 48 50C62 54 69 62 74 72" fill="#edf3ea" />
+          <g transform="translate(74 44)">
+            <ellipse cx="0" cy="-20" rx="11" ry="23" fill="#fbf2f4" />
+            <ellipse cx="20" cy="-4" rx="21" ry="11" fill="#f6dfe5" transform="rotate(20)" />
+            <ellipse cx="14" cy="16" rx="12" ry="22" fill="#fff8f2" transform="rotate(42)" />
+            <ellipse cx="-14" cy="16" rx="12" ry="22" fill="#f7e5ea" transform="rotate(-42)" />
+            <ellipse cx="-20" cy="-4" rx="21" ry="11" fill="#fff8f2" transform="rotate(-20)" />
+            <circle cx="0" cy="0" r="9" fill="#f1cfb3" />
+          </g>
         </svg>
       </div>
-      <div className="absolute left-[10%] bottom-[16%] animate-[floatFlower_9s_ease-in-out_infinite] opacity-55" style={{ animationDelay: "-4s" }}>
-        <svg viewBox="0 0 120 120" className="h-16 w-16">
-          <circle cx="60" cy="60" r="8" fill="#f4d35e" />
-          <ellipse cx="60" cy="36" rx="10" ry="18" fill="#faf6ef" />
-          <ellipse cx="84" cy="60" rx="18" ry="10" fill="#9db7d5" />
-          <ellipse cx="60" cy="84" rx="10" ry="18" fill="#a8c3a1" />
-          <ellipse cx="36" cy="60" rx="18" ry="10" fill="#fff7cc" />
+      <div className="absolute left-[11%] bottom-[14%] animate-[floatFlower_11s_ease-in-out_infinite] opacity-60" style={{ animationDelay: "-5s" }}>
+        <svg viewBox="0 0 130 130" className="h-20 w-20 drop-shadow-[0_14px_18px_rgba(148,113,127,0.12)]">
+          <g transform="translate(65 65)">
+            <ellipse cx="0" cy="-18" rx="10" ry="20" fill="#fbf1f3" />
+            <ellipse cx="18" cy="-4" rx="18" ry="10" fill="#f5dde3" transform="rotate(22)" />
+            <ellipse cx="12" cy="14" rx="11" ry="20" fill="#fff7f1" transform="rotate(44)" />
+            <ellipse cx="-12" cy="14" rx="11" ry="20" fill="#f7e6ea" transform="rotate(-44)" />
+            <ellipse cx="-18" cy="-4" rx="18" ry="10" fill="#fff7f1" transform="rotate(-22)" />
+            <circle cx="0" cy="0" r="8" fill="#efcaaa" />
+          </g>
         </svg>
       </div>
-      <div className="absolute right-[12%] bottom-[22%] animate-[floatFlower_11s_ease-in-out_infinite] opacity-60" style={{ animationDelay: "-1s" }}>
-        <svg viewBox="0 0 140 140" className="h-24 w-24">
-          <circle cx="70" cy="70" r="11" fill="#f4d35e" />
-          <ellipse cx="70" cy="36" rx="14" ry="24" fill="#faf6ef" />
-          <ellipse cx="104" cy="70" rx="24" ry="14" fill="#a8c3a1" />
-          <ellipse cx="70" cy="104" rx="14" ry="24" fill="#9db7d5" />
-          <ellipse cx="36" cy="70" rx="24" ry="14" fill="#dbeafe" />
+      <div className="absolute right-[12%] bottom-[18%] animate-[floatFlower_13s_ease-in-out_infinite] opacity-65" style={{ animationDelay: "-2s" }}>
+        <svg viewBox="0 0 170 170" className="h-28 w-28 drop-shadow-[0_20px_24px_rgba(148,113,127,0.14)]">
+          <path d="M84 158C85 130 86 98 92 42" stroke="#88a387" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M91 80C111 66 122 50 124 30C105 35 94 46 86 62" fill="#dce8d8" />
+          <path d="M88 94C69 80 58 66 56 48C75 54 86 66 95 82" fill="#edf3ea" />
+          <g transform="translate(86 56)">
+            <ellipse cx="0" cy="-24" rx="13" ry="28" fill="#fdf4f4" />
+            <ellipse cx="24" cy="-6" rx="24" ry="13" fill="#f2d8df" transform="rotate(24)" />
+            <ellipse cx="16" cy="20" rx="14" ry="25" fill="#fff8f3" transform="rotate(46)" />
+            <ellipse cx="-16" cy="20" rx="14" ry="25" fill="#f7e2e7" transform="rotate(-46)" />
+            <ellipse cx="-24" cy="-6" rx="24" ry="13" fill="#fff8f3" transform="rotate(-24)" />
+            <circle cx="0" cy="0" r="10" fill="#efc7a3" />
+          </g>
         </svg>
       </div>
     </div>
   );
-  const navItems = [
-    "Home",
-    "Our Story",
-    "RSVP",
-    "Schedule",
-    "Travel",
-    "Registry",
-    "Wedding Gifts",
-    "Wedding Party",
-  ];
+
+  const PalmLeaves = () => (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <svg className="absolute -left-10 top-8 h-72 w-72 opacity-30 md:h-96 md:w-96" viewBox="0 0 320 320" fill="none">
+        <path d="M158 300C150 240 152 170 180 84" stroke="#567a62" strokeWidth="4" strokeLinecap="round" />
+        <path d="M176 100C132 78 96 54 74 22C110 26 146 46 186 88" fill="#7fa486" />
+        <path d="M176 124C126 116 84 118 42 138C80 154 122 154 184 136" fill="#92b297" />
+        <path d="M180 146C134 164 102 188 76 226C116 218 150 198 188 156" fill="#a4c0a7" />
+        <path d="M192 108C222 68 254 42 292 28C274 68 242 98 198 120" fill="#6e9477" />
+        <path d="M198 138C242 126 278 124 314 138C282 160 244 164 194 148" fill="#85a98b" />
+      </svg>
+      <svg className="absolute -right-8 top-20 h-64 w-64 opacity-25 md:h-80 md:w-80" viewBox="0 0 320 320" fill="none">
+        <path d="M162 292C172 232 170 168 142 78" stroke="#567a62" strokeWidth="4" strokeLinecap="round" />
+        <path d="M148 96C188 72 224 48 248 18C212 22 176 44 140 86" fill="#7f9f84" />
+        <path d="M144 124C194 114 236 116 280 136C240 152 198 154 138 136" fill="#98b69d" />
+        <path d="M140 150C184 166 220 190 246 228C206 220 170 198 134 158" fill="#adc6b0" />
+      </svg>
+    </div>
+  );
+
+  const ParallaxWaves = () => (
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
+      <div
+        className="absolute inset-x-0 bottom-14 h-24 opacity-35"
+        style={{ transform: `translateY(${Math.min(scrollY * 0.08, 28)}px)` }}
+      >
+        <svg viewBox="0 0 1440 180" className="h-full w-[220%]" preserveAspectRatio="none" fill="none">
+          <path d="M0 112L48 102.7C96 93.3 192 74.7 288 74.7C384 74.7 480 93.3 576 98.7C672 104 768 96 864 85.3C960 74.7 1056 61.3 1152 64C1248 66.7 1344 85.3 1392 94.7L1440 104V180H1392C1344 180 1248 180 1152 180C1056 180 960 180 864 180C768 180 672 180 576 180C480 180 384 180 288 180C192 180 96 180 48 180H0Z" fill="#fff3c8" />
+        </svg>
+      </div>
+      <div
+        className="absolute inset-x-0 bottom-6 h-28 opacity-55"
+        style={{ transform: `translateY(${Math.min(scrollY * 0.12, 42)}px)` }}
+      >
+        <svg viewBox="0 0 1440 180" className="h-full w-[220%]" preserveAspectRatio="none" fill="none">
+          <path d="M0 92L48 84C96 76 192 60 288 60C384 60 480 76 576 90.7C672 105.3 768 134.7 864 136C960 137.3 1056 110.7 1152 98.7C1248 86.7 1344 89.3 1392 90.7L1440 92V180H1392C1344 180 1248 180 1152 180C1056 180 960 180 864 180C768 180 672 180 576 180C480 180 384 180 288 180C192 180 96 180 48 180H0Z" fill="#8ed6e8" />
+        </svg>
+      </div>
+      <div
+        className="absolute inset-x-0 bottom-0 h-32 opacity-80"
+        style={{ transform: `translateY(${Math.min(scrollY * 0.18, 56)}px)` }}
+      >
+        <svg viewBox="0 0 1440 180" className="h-full w-[220%]" preserveAspectRatio="none" fill="none">
+          <path d="M0 74.7L48 80C96 85.3 192 96 288 110.7C384 125.3 480 144 576 145.3C672 146.7 768 130.7 864 118.7C960 106.7 1056 98.7 1152 101.3C1248 104 1344 117.3 1392 124L1440 130.7V180H1392C1344 180 1248 180 1152 180C1056 180 960 180 864 180C768 180 672 180 576 180C480 180 384 180 288 180C192 180 96 180 48 180H0Z" fill="#4ea8c7" />
+        </svg>
+      </div>
+    </div>
+  );
+  const navItems = React.useMemo(
+    () => [
+      { label: "Home", id: "home" },
+      { label: "Our Story", id: "our-story" },
+      { label: "Engagement Photos", id: "engagement-photos" },
+      { label: "RSVP", id: "rsvp" },
+      { label: "Schedule", id: "schedule" },
+      { label: "Travel", id: "travel" },
+      { label: "Registry & Gifts", id: "registry" },
+      { label: "Wedding Party", id: "wedding-party" },
+    ],
+    [],
+  );
+
+  React.useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => section !== null);
+
+    if (sections.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visibleEntries[0]?.target.id) {
+          setActiveSection(visibleEntries[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-25% 0px -55% 0px",
+        threshold: [0.15, 0.3, 0.5, 0.75],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [navItems]);
 
   const schedule = [
-    { time: "4:30 PM", event: "Guest Arrival", type: "arrival" },
-    { time: "5:00 PM", event: "Ceremony Begins", type: "ceremony" },
-    { time: "5:45 PM", event: "Cocktail Hour", type: "cocktail" },
-    { time: "6:45 PM", event: "Reception", type: "reception" },
-    { time: "8:00 PM", event: "Dinner + Toasts", type: "dinner" },
-    { time: "9:00 PM", event: "Dancing + Celebration", type: "dance" },
+    { time: "4:30 PM", event: "Guest Arrival", type: "arrival", location: "Mithi Resort & Spa" },
+    { time: "5:00 PM", event: "Ceremony Begins", type: "ceremony", location: "Mithi Islet" },
+    { time: "5:45 PM", event: "Cocktail Hour", type: "cocktail", location: "Beach at Mithi Resort & Spa" },
+    { time: "6:45 PM", event: "Reception", type: "reception", location: "Garden Square Garden, Mithi Resort & Spa" },
+    { time: "8:00 PM", event: "Dinner + Toasts", type: "dinner", location: "Garden Square Garden, Mithi Resort & Spa" },
+    { time: "9:00 PM", event: "Dancing + Celebration", type: "dance", location: "Garden Square Garden, Mithi Resort & Spa" },
   ];
 
   const ScheduleIcon = ({ type }) => {
@@ -176,14 +323,72 @@ export default function MithiWeddingWebsite() {
 
   const registryItems = [
     "Your presence at our wedding is the greatest gift of all.",
-    "If you would like to celebrate with a gift, we are grateful for contributions toward our future together.",
-    "Registry details and gift links can be added here.",
   ];
 
   const gifts = [
     { name: "Send a Wedding Gift", label: "Send via PayPal", link: "https://paypal.me/yourlink" },
-    { name: "Honeymoon Fund", label: "Send via PayPal", link: "https://paypal.me/yourlink" },
-    { name: "Celebration Gift", label: "Send via PayPal", link: "https://paypal.me/yourlink" },
+  ];
+
+  const mapStops = [
+    {
+      name: "Ceremony",
+      area: "Mithi Islet",
+      note: "Our ceremony will take place at Mithi Islet.",
+      x: "60%",
+      y: "34%",
+      color: "bg-[#f5b7a5]",
+      ring: "ring-[#f5b7a5]/50",
+      link: "https://maps.google.com/?q=Mithi+Islet+Bohol",
+    },
+    {
+      name: "Reception",
+      area: "Garden Square at Mithi",
+      note: "The reception will follow at Garden Square at Mithi.",
+      x: "60%",
+      y: "42%",
+      color: "bg-[#f0d37a]",
+      ring: "ring-[#f0d37a]/55",
+      link: "https://maps.google.com/?q=Garden+Square+Mithi+Resort+and+Spa+Bohol",
+    },
+    {
+      name: "Mithi Resort",
+      area: "Resort Stay",
+      note: "This is the main wedding hub and where the couple will be staying.",
+      x: "48%",
+      y: "56%",
+      color: "bg-[#8cc7be]",
+      ring: "ring-[#8cc7be]/55",
+      link: "https://maps.google.com/?q=Mithi+Resort+and+Spa+Bohol",
+    },
+    {
+      name: "Nearby Hotels",
+      area: "Panglao Options",
+      note: "A cluster of nearby accommodations for guests staying off property.",
+      x: "32%",
+      y: "42%",
+      color: "bg-[#98b8de]",
+      ring: "ring-[#98b8de]/55",
+      link: "https://maps.google.com/?q=hotels+near+Mithi+Resort+and+Spa+Bohol",
+    },
+    {
+      name: "Panglao Airport",
+      area: "Arrival Point",
+      note: "Most guests will arrive here before heading to the resort.",
+      x: "18%",
+      y: "72%",
+      color: "bg-[#d5b0d8]",
+      ring: "ring-[#d5b0d8]/55",
+      link: "https://maps.google.com/?q=Bohol-Panglao+International+Airport",
+    },
+  ];
+  const activeMapStop = mapStops.find((stop) => stop.name === selectedMapStop) ?? mapStops[0];
+
+  const heroPhotos = [
+    { label: "photo 1", accent: "from-[#f6d3b6] via-[#fbead8] to-[#f7c2c7]" },
+    { label: "photo 2", accent: "from-[#f8dca8] via-[#fdf3d2] to-[#9fd5e8]" },
+    { label: "photo 3", accent: "from-[#d6e8d1] via-[#f7efe3] to-[#f4c3cf]" },
+    { label: "photo 4", accent: "from-[#f5c6a4] via-[#ffe6d6] to-[#c9e7ef]" },
+    { label: "photo 5", accent: "from-[#f3d6df] via-[#fff5ef] to-[#dce9d7]" },
   ];
 
   const weddingParty = {
@@ -206,7 +411,7 @@ export default function MithiWeddingWebsite() {
   };
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#f8f5ee_0%,#dbeafe_30%,#e7f3ea_55%,#fff7cc_75%,#faf6ef_100%)] text-slate-800">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff3d9_0%,#ffd6b5_18%,#f7a8a0_34%,#89c7df_56%,#5eb4c8_72%,#f6e7b2_88%,#faf6ef_100%)] text-slate-800">
       <style>{`
         @keyframes waveDrift {
           0% { transform: translateX(0); }
@@ -217,8 +422,8 @@ export default function MithiWeddingWebsite() {
           100% { transform: translateX(0); }
         }
         @keyframes floatFlower {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-12px) rotate(3deg); }
+          0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+          50% { transform: translate3d(0, -10px, 0) rotate(2.5deg) scale(1.02); }
         }
       `}</style>
       <header className="sticky top-0 z-20 border-b border-slate-200/40 bg-[#1e3a5f] text-white backdrop-blur">
@@ -227,45 +432,42 @@ export default function MithiWeddingWebsite() {
             <p className="text-xs uppercase tracking-[0.35em] text-white/70">Mithi Resort Wedding</p>
             <h1 className="text-2xl font-semibold">Alder &amp; Kathy</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <label htmlFor="site-nav" className="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
-              Menu
-            </label>
-            <select
-              id="site-nav"
-              defaultValue=""
-              onChange={(event) => {
-                const target = event.target.value;
-
-                if (target) {
-                  window.location.hash = target;
-                }
-              }}
-              className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white outline-none transition hover:bg-white/15"
-            >
-              <option value="" disabled className="text-slate-800">
-                Jump to...
-              </option>
-              {navItems.map((item) => (
-                <option key={item} value={item.toLowerCase().replace(/\s+/g, "-")} className="text-slate-800">
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
+          <p className="text-sm font-medium uppercase tracking-[0.24em] text-white/75">March 27, 2027</p>
         </div>
       </header>
+
+      <nav className="fixed left-1/2 top-24 z-30 hidden -translate-x-1/2 rounded-full border border-white/70 bg-white/70 p-2 shadow-[0_18px_40px_rgba(30,58,95,0.14)] backdrop-blur md:block">
+        <div className="flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={() => setActiveSection(item.id)}
+              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                activeSection === item.id
+                  ? "bg-[#1e3a5f] text-white shadow"
+                  : "text-slate-600 hover:bg-white/80 hover:text-[#1e3a5f]"
+              }`}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </nav>
 
       <section
         id="home"
         className="relative overflow-hidden"
       >
+        <PalmLeaves />
         <FloatingFlowers />
-        <div className="absolute inset-0 opacity-40">
-          {/* watercolor background blobs */}
-          <div className="absolute -top-10 left-1/4 h-72 w-72 rounded-full bg-yellow-200 blur-[120px] opacity-40" />
-          <div className="absolute top-1/3 right-1/4 h-72 w-72 rounded-full bg-green-200 blur-[120px] opacity-40" />
-          <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-blue-200 blur-[120px] opacity-40" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,245,229,0.92)_0%,rgba(255,212,177,0.78)_18%,rgba(247,161,156,0.45)_36%,rgba(132,203,225,0.4)_60%,rgba(70,160,191,0.22)_78%,rgba(248,240,214,0.88)_100%)]" />
+        <div className="absolute inset-0 opacity-50">
+          <div className="absolute -top-14 left-1/4 h-80 w-80 rounded-full bg-[#ffe7ad] blur-[140px] opacity-70" />
+          <div className="absolute top-12 right-[18%] h-72 w-72 rounded-full bg-[#ffc5a6] blur-[130px] opacity-60" />
+          <div className="absolute top-1/3 left-[8%] h-80 w-80 rounded-full bg-[#f59ca8] blur-[150px] opacity-35" />
+          <div className="absolute bottom-16 right-10 h-80 w-80 rounded-full bg-[#7dd3e8] blur-[140px] opacity-45" />
+          <div className="absolute bottom-8 left-1/3 h-72 w-72 rounded-full bg-[#f6e6b6] blur-[120px] opacity-55" />
 
           {/* sage leaf illustration */}
           <svg className="absolute right-20 top-40 w-40 opacity-40" viewBox="0 0 200 200" fill="none">
@@ -299,9 +501,42 @@ export default function MithiWeddingWebsite() {
             <p className="mb-4 inline-block rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-600 shadow-sm">
               March 27, 2027 • Mithi Resort &amp; Spa
             </p>
-            <h2 className="max-w-2xl text-5xl font-semibold leading-tight md:text-6xl">
-              <span className="text-slate-500 text-lg">(Hero engagement photo will appear here)</span>
-            </h2>
+            <div className="mb-6 max-w-xl rounded-[1.75rem] border border-white/70 bg-white/70 px-6 py-4 shadow-xl backdrop-blur">
+              <p className="text-2xl font-semibold tracking-tight text-[#1e3a5f] md:text-3xl">
+                {timeLeft.days} Days • {timeLeft.hours} Hours • {timeLeft.minutes} Minutes
+              </p>
+              <p className="mt-2 text-sm uppercase tracking-[0.22em] text-slate-500">
+                until Alder &amp; Kathy say "I do"
+              </p>
+            </div>
+            <div className="max-w-2xl">
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/45 p-3 shadow-[0_24px_70px_rgba(30,58,95,0.12)] backdrop-blur">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[1.6rem] bg-white/70 md:aspect-[16/11]">
+                  {heroPhotos.map((photo, index) => (
+                    <div
+                      key={photo.label}
+                      className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${photo.accent} px-6 text-center transition-opacity duration-700 ${index === heroSlide ? "opacity-100" : "opacity-0"}`}
+                    >
+                      <div className="rounded-[1.8rem] border border-white/70 bg-white/35 px-10 py-12 shadow-[0_18px_40px_rgba(255,255,255,0.22)] backdrop-blur-sm">
+                        <p className="text-xs uppercase tracking-[0.45em] text-slate-500">Engagement Photo</p>
+                        <p className="mt-4 text-4xl font-semibold text-[#1e3a5f] md:text-5xl">{photo.label}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center gap-2">
+                  {heroPhotos.map((photo, index) => (
+                    <span
+                      key={photo.label}
+                      className={`h-2.5 rounded-full transition-all duration-500 ${index === heroSlide ? "w-8 bg-[#1e3a5f]" : "w-2.5 bg-white/80"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p className="mt-4 text-sm uppercase tracking-[0.24em] text-slate-500">
+                Hero slideshow of engagement photos
+              </p>
+            </div>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
               We are so excited to celebrate our wedding with the people we love most.
               Join us in beautiful Bohol for a romantic destination weekend filled with joy,
@@ -325,6 +560,18 @@ export default function MithiWeddingWebsite() {
 
           <div className="grid gap-4">
             <div className="rounded-[2rem] border border-white/80 bg-white/70 p-6 shadow-2xl backdrop-blur">
+              <div className="mb-5 rounded-[1.6rem] border border-[#f2dec7] bg-[linear-gradient(135deg,rgba(255,245,235,0.96),rgba(255,234,214,0.82),rgba(226,241,247,0.86))] p-5 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Celebration Snapshot</p>
+                <h3 className="mt-3 text-2xl font-semibold text-[#1e3a5f]">Sunset vows, ocean air, and a full weekend in Bohol.</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">
+                  A romantic coastal celebration with soft colors, tropical energy, and all our favorite people in one place.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">Beach Weekend</span>
+                  <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">Destination Wedding</span>
+                  <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">Golden Hour Ceremony</span>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="rounded-2xl bg-[#dbeafe] p-4">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Palette</p>
@@ -344,14 +591,9 @@ export default function MithiWeddingWebsite() {
                 </div>
               </div>
             </div>
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-lg">
-              <p className="text-sm leading-7 text-slate-600">
-                This site can be customized with your names, engagement photos, RSVP link,
-                hotel booking details, registry links, and your full wedding party list.
-              </p>
-            </div>
           </div>
         </div>
+        <ParallaxWaves />
         <OceanWaves />
       </section>
 
@@ -580,7 +822,7 @@ export default function MithiWeddingWebsite() {
           <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Schedule</p>
           <h3 className="mt-3 text-4xl font-semibold">Wedding Day Timeline</h3>
           <p className="mt-4 text-slate-600">
-            A relaxed and beautiful evening celebration by the sea.
+            Our wedding day will take place at <span className="font-semibold text-[#1e3a5f]">Mithi Resort &amp; Spa</span>, with each part of the celebration unfolding across the property.
           </p>
         </div>
         <div className="max-w-xl mx-auto space-y-6">
@@ -593,10 +835,94 @@ export default function MithiWeddingWebsite() {
                 <div>
                   <h4 className="text-xl font-semibold text-slate-800">{item.event}</h4>
                   <p className="mt-1 text-sm uppercase tracking-[0.15em] text-slate-500">{item.time}</p>
+                  <p className="mt-3 text-sm font-medium text-[#1e3a5f]">{item.location}</p>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <GoldDivider />
+      <section id="map" className="relative overflow-hidden bg-[linear-gradient(180deg,#f9f3e8,#e8f3f8,#edf5ec)] py-20">
+        <div className="absolute inset-0 opacity-35">
+          <div className="absolute left-10 top-10 h-56 w-56 rounded-full bg-[#ffe0c8] blur-[110px]" />
+          <div className="absolute bottom-10 right-10 h-64 w-64 rounded-full bg-[#cfe8ef] blur-[120px]" />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="max-w-2xl">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Interactive Map</p>
+            <h3 className="mt-3 text-4xl font-semibold">Show Where Everything Is</h3>
+            <p className="mt-4 text-slate-600">
+              Tap a stop to see where each part of the weekend fits into the celebration.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="grid gap-4">
+              {mapStops.map((stop) => (
+                <button
+                  key={stop.name}
+                  type="button"
+                  onClick={() => setSelectedMapStop(stop.name)}
+                  className={`rounded-[1.8rem] border px-5 py-5 text-left shadow-sm transition hover:-translate-y-1 ${selectedMapStop === stop.name ? "border-slate-300 bg-white shadow-lg" : "border-white/70 bg-white/70"}`}
+                >
+                  <div className="flex items-start gap-4">
+                    <span className={`mt-1 h-4 w-4 rounded-full ${stop.color} ring-4 ${stop.ring}`} />
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{stop.area}</p>
+                      <h4 className="mt-2 text-xl font-semibold text-slate-800">{stop.name}</h4>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{stop.note}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="rounded-[2.2rem] border border-white/80 bg-white/75 p-5 shadow-[0_18px_50px_rgba(30,58,95,0.1)] backdrop-blur">
+              <div className="relative overflow-hidden rounded-[1.8rem] border border-[#cfe2e8] bg-[linear-gradient(180deg,#cfe8ef_0%,#eff8fb_45%,#f4e7b8_78%,#f8efe0_100%)] p-6">
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-[linear-gradient(180deg,rgba(119,192,215,0)_0%,rgba(119,192,215,0.18)_40%,rgba(82,161,187,0.42)_100%)]" />
+                <div className="absolute left-[12%] top-[18%] h-12 w-20 rounded-full bg-white/25 blur-xl" />
+                <div className="absolute right-[18%] top-[14%] h-10 w-16 rounded-full bg-white/30 blur-xl" />
+                <div className="relative h-[420px] rounded-[1.5rem] border border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0.05))]">
+                  <div className="absolute left-[12%] top-[16%] h-40 w-56 rounded-[52%] border border-[#90c9c4]/40 bg-[#9fd8d1]/20 blur-[2px]" />
+                  <div className="absolute right-[10%] bottom-[18%] h-44 w-64 rounded-[58%] border border-[#e5d79c]/40 bg-[#f5e4a7]/20 blur-[2px]" />
+                  <div className="absolute left-[22%] top-[28%] h-[2px] w-[42%] rotate-[14deg] bg-white/70" />
+                  <div className="absolute left-[24%] top-[58%] h-[2px] w-[38%] -rotate-[24deg] bg-white/60" />
+                  <div className="absolute left-[44%] top-[38%] h-[24%] w-[2px] bg-white/60" />
+
+                  {mapStops.map((stop) => (
+                    <button
+                      key={stop.name}
+                      type="button"
+                      onClick={() => setSelectedMapStop(stop.name)}
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
+                      style={{ left: stop.x, top: stop.y }}
+                    >
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${stop.color} ring-8 ${selectedMapStop === stop.name ? stop.ring : "ring-white/50"} transition`} />
+                      <span className="mt-3 block whitespace-nowrap rounded-full bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 shadow">
+                        {stop.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-5 rounded-[1.6rem] bg-[#f8fbfc] p-5">
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{activeMapStop.area}</p>
+                <h4 className="mt-2 text-2xl font-semibold text-[#1e3a5f]">{activeMapStop.name}</h4>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">{activeMapStop.note}</p>
+                <a
+                  href={activeMapStop.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex rounded-full bg-[#1e3a5f] px-5 py-3 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5"
+                >
+                  Open in Google Maps
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -712,7 +1038,7 @@ export default function MithiWeddingWebsite() {
       <GoldDivider />
       <section id="registry" className="mx-auto max-w-7xl px-6 py-20 bg-[#faf6ef]">
         <div className="mb-10 max-w-2xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Registry</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Registry &amp; Gifts</p>
           <h3 className="mt-3 text-4xl font-semibold">Your Presence Is the Best Gift</h3>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
@@ -722,14 +1048,13 @@ export default function MithiWeddingWebsite() {
             </div>
           ))}
         </div>
-      </section>
-
-      <GoldDivider />
-      <section id="wedding-gifts" className="bg-[#fff7cc]/40 py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-10 max-w-2xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Wedding Gifts</p>
-            <h3 className="mt-3 text-4xl font-semibold">Wedding Gifts</h3>
+        <div className="mt-12">
+          <div className="mb-8 max-w-2xl">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Gift Options</p>
+            <h4 className="mt-3 text-3xl font-semibold">Ways to Celebrate With a Gift</h4>
+            <p className="mt-4 text-sm leading-7 text-slate-600">
+              If you would like to celebrate with a gift, we are grateful for contributions toward our future together.
+            </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {gifts.map((gift) => (
@@ -737,6 +1062,7 @@ export default function MithiWeddingWebsite() {
                 key={gift.name}
                 href={gift.link}
                 target="_blank"
+                rel="noreferrer"
                 className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition block"
               >
                 <h4 className="text-lg font-semibold">{gift.name}</h4>
