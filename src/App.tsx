@@ -436,14 +436,14 @@ export default function MithiWeddingWebsite() {
         </div>
       </header>
 
-      <nav className="fixed left-1/2 top-24 z-30 hidden -translate-x-1/2 rounded-full border border-white/70 bg-white/70 p-2 shadow-[0_18px_40px_rgba(30,58,95,0.14)] backdrop-blur md:block">
-        <div className="flex items-center gap-1">
+      <nav className="fixed inset-x-3 bottom-3 z-30 rounded-[1.5rem] border border-white/70 bg-white/75 p-2 shadow-[0_18px_40px_rgba(30,58,95,0.14)] backdrop-blur md:inset-x-auto md:left-1/2 md:top-24 md:bottom-auto md:w-auto md:-translate-x-1/2 md:rounded-full">
+        <div className="flex items-center gap-1 overflow-x-auto whitespace-nowrap px-1 md:px-0">
           {navItems.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
               onClick={() => setActiveSection(item.id)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+              className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
                 activeSection === item.id
                   ? "bg-[#1e3a5f] text-white shadow"
                   : "text-slate-600 hover:bg-white/80 hover:text-[#1e3a5f]"
