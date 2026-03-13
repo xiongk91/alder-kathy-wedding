@@ -1,4 +1,5 @@
 import React from "react";
+import weddingRsvpQr20260312 from "./assets/wedding-rsvp-qr-20260312.png";
 
 export default function MithiWeddingWebsite() {
   const [storyView, setStoryView] = React.useState<"bride" | "groom">("bride");
@@ -226,17 +227,32 @@ export default function MithiWeddingWebsite() {
             <p className="text-xs uppercase tracking-[0.35em] text-white/70">Mithi Resort Wedding</p>
             <h1 className="text-2xl font-semibold">Alder &amp; Kathy</h1>
           </div>
-          <nav className="hidden gap-6 md:flex">
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-sm font-medium text-white/90 transition hover:text-white"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
+          <div className="flex items-center gap-3">
+            <label htmlFor="site-nav" className="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
+              Menu
+            </label>
+            <select
+              id="site-nav"
+              defaultValue=""
+              onChange={(event) => {
+                const target = event.target.value;
+
+                if (target) {
+                  window.location.hash = target;
+                }
+              }}
+              className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white outline-none transition hover:bg-white/15"
+            >
+              <option value="" disabled className="text-slate-800">
+                Jump to...
+              </option>
+              {navItems.map((item) => (
+                <option key={item} value={item.toLowerCase().replace(/\s+/g, "-")} className="text-slate-800">
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </header>
 
@@ -534,7 +550,7 @@ export default function MithiWeddingWebsite() {
         <div className="mt-10 flex justify-center">
           <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-lg">
             <img
-              src={publicAsset("photos/wedding_rsvp_qr.png")}
+              src={weddingRsvpQr20260312}
               alt="Wedding RSVP QR code"
               className="h-56 w-56 rounded-2xl object-contain"
             />
